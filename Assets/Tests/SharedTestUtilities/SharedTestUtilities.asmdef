@@ -1,0 +1,17 @@
+{
+    "name": "SharedTestUtilities",
+    "rootNamespace": "",
+    "references": [
+        "GUID:839397d8d39dbc140984cea67495d4fe",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
