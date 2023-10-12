@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Match3;
 using Settings;
 using UnityEngine;
 
-namespace Services
+namespace Services.Board
 {
     public class BoardService : IBoardProvider
     {
@@ -22,7 +21,7 @@ namespace Services
             Board = _boardGenerator.Generate(levelSettings.Size, levelSettings.AvailableTiles);
         }
 
-        public void FillEmptyTiles(TileSettings[] availableTiles)
+        public void FillEmptyTiles(TileType[] availableTiles)
         {
             _boardGenerator.FillEmptyTiles(Board, availableTiles);
         }
@@ -57,7 +56,7 @@ namespace Services
 
         public void FallTiles()
         {
-            var width = Board.Tiles.GetLength(0);
+            var width = Board.GetSize().x;
             for (var column = 0; column < width; column++)
             {
                 FallTilesInColumn(column);
@@ -66,14 +65,12 @@ namespace Services
 
         private void FallTilesInColumn(int column)
         {
-            var tiles = Board.Tiles;
-            var height = tiles.GetLength(1);
-
+            var height = Board.GetSize().y;
             var countEmptyTiles = 0;
 
             for (var i = height - 1; i >= 0; i--)
             {
-                var isEmptyTile = Board.Tiles[column, i] == null;
+                var isEmptyTile = Board.Get(column, i) == null;
                 if (isEmptyTile)
                 {
                     countEmptyTiles++;

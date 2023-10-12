@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Services;
+using Services.Board;
 using Settings;
 
 namespace Tests.EditMode
@@ -7,7 +8,7 @@ namespace Tests.EditMode
     [TestFixture]
     public class BoardServiceTests
     {
-        private TileSettings[] _availableTiles;
+        private TileType[] _availableTiles;
         private BoardGenerator _boardGenerator;
 
         [SetUp]
@@ -16,7 +17,7 @@ namespace Tests.EditMode
             _boardGenerator = new BoardGenerator(new MatchDetectionService());
             _availableTiles = new[]
             {
-                new TileSettings(), new TileSettings(), new TileSettings()
+                new TileType(), new TileType(), new TileType()
             };
         }
 
@@ -144,10 +145,10 @@ namespace Tests.EditMode
 
             boardService.FillEmptyTiles(_availableTiles);
 
-            Assert.IsNotNull(board.Tiles[2, 0]);
-            Assert.IsNotNull(board.Tiles[2, 2]);
-            Assert.IsNotNull(board.Tiles[0, 4]);
-            Assert.IsNotNull(board.Tiles[2, 4]);
+            Assert.IsNotNull(board.Get(2, 0));
+            Assert.IsNotNull(board.Get(2, 2));
+            Assert.IsNotNull(board.Get(0, 4));
+            Assert.IsNotNull(board.Get(2, 4));
         }
     }
 }

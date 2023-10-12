@@ -10,7 +10,7 @@ namespace Tests.EditMode
     public class MatchesDetectionServiceTests
     {
         private MatchDetectionService _service;
-        private TileSettings[] _availableTiles;
+        private TileType[] _availableTiles;
 
         [SetUp]
         public void SetUp()
@@ -19,7 +19,7 @@ namespace Tests.EditMode
 
             _availableTiles = new[]
             {
-                new TileSettings(), new TileSettings(), new TileSettings()
+                new TileType(), new TileType(), new TileType()
             };
         }
 

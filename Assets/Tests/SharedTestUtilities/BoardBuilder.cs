@@ -1,17 +1,17 @@
 ﻿using System;
-using Match3;
+using Services.Board;
 using Settings;
 
 public class BoardBuilder
 {
-    private readonly TileSettings[] _availableTiles;
-    private readonly TileSettings[,] _tiles;
+    private readonly TileType[] _availableTiles;
+    private readonly TileType[,] _tiles;
     private int _currentRowIndex;
     private Board _board;
 
-    public BoardBuilder(int width, int height, TileSettings[] availableTilesArray)
+    public BoardBuilder(int width, int height, TileType[] availableTilesArray)
     {
-        _tiles = new TileSettings[width, height];
+        _tiles = new TileType[width, height];
         _availableTiles = availableTilesArray;
     }
 

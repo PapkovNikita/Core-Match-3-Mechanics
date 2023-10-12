@@ -1,7 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Extensions;
-using Match3;
+using Services.Board;
 using UnityEngine;
 using VContainer;
 
@@ -28,8 +28,8 @@ namespace Views
         public UniTask Show(Board board)
         {
             _board = board;
-            var width = board.Tiles.GetLength(0);
-            var height = board.Tiles.GetLength(1);
+            var width = board.GetSize().x;
+            var height = board.GetSize().y;
             _tileViews = new TileView[width, height];
 
             var showingSequence = DOTween.Sequence();
@@ -46,11 +46,11 @@ namespace Views
 
         private Tweener ShowNewTile(Board board, int x, int y)
         {
-            var tileSettings = board.Tiles[x, y];
+            var tileSettings = board.Get(x, y);
             
             // TODO: I understand that it's critically important to use a pool here,
             // but in this case, I'm not doing it jut to save time
-            var tile = Instantiate(tileSettings.Tile, transform);
+            var tile = Instantiate(tileSettings.ViewPrefab, transform);
             var tileTransform = tile.transform;
 
             var tileIndex = new Vector3Int(x, y);
@@ -90,11 +90,11 @@ namespace Views
         {
             var sequence = DOTween.Sequence();
 
-            for (var i = 0; i < _board.Tiles.GetLength(0); i++)
+            for (var i = 0; i < _board.GetSize().x; i++)
             {
-                for (var j = 0; j < _board.Tiles.GetLength(1); j++)
+                for (var j = 0; j < _board.GetSize().y; j++)
                 {
-                    var tile = _board.Tiles[i, j];
+                    var tile = _board.Get(i, j);
                     if (tile != null)
                     {
                         continue;
@@ -157,8 +157,8 @@ namespace Views
         {
             var sequence = DOTween.Sequence();
             
-            var width = _board.Tiles.GetLength(0);
-            var height = _board.Tiles.GetLength(1);
+            var width = _board.GetSize().x;
+            var height = _board.GetSize().y;
             for (var x = 0; x < width; x++)
             {
                 for (var y = height - 1; y >= 0; y--)

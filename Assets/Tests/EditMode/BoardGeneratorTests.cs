@@ -1,6 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Services;
+using Services.Board;
 using Settings;
 using UnityEngine;
 
@@ -9,14 +9,14 @@ namespace Tests.EditMode
     [TestFixture]
     public class BoardGeneratorTests
     {
-        private TileSettings[] _availableTiles;
+        private TileType[] _availableTiles;
 
         [SetUp]
         public void SetUp()
         {
             _availableTiles = new[]
             {
-                new TileSettings(), new TileSettings(), new TileSettings()
+                new TileType(), new TileType(), new TileType()
             };
         }
 

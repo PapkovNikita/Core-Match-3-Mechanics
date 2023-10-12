@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Match3Scene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Tests/PlayMode/Scenes/Match3UITestScene.unity
+    path: Assets/Tests/PlayMode/Scenes/Match3IntegrationTestScene.unity
     guid: bfcbdda69d669a846a142f3bd89dd1d1
   m_configObjects: {}

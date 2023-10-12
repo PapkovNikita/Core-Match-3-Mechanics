@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Extensions.UniRx
@@ -266,7 +267,7 @@ namespace Extensions.UniRx
         /// Returns an enumerator that iterates through the CompositeDisposable.
         /// </summary>
         /// <returns>An enumerator to iterate over the disposables.</returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }

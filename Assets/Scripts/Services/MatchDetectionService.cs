@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Extensions;
-using Match3;
 using Misc;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace Services
     {
         private const int MIN_MATCH_SIZE = 3;
 
-        public bool HasMatchAt(Board board, Vector3Int position)
+        public bool HasMatchAt(Board.Board board, Vector3Int position)
         {
             var horizontalMatch = GetMatchSizeByAxisAt(board, position, Axis.X);
             var verticalMatch = GetMatchSizeByAxisAt(board, position, Axis.Y);
@@ -20,10 +19,10 @@ namespace Services
                    verticalMatch >= MIN_MATCH_SIZE;
         }
 
-        private static int GetMatchSizeByAxisAt(Board board, Vector3Int position, int axis)
+        private static int GetMatchSizeByAxisAt(Board.Board board, Vector3Int position, int axis)
         {
-            var tileAtPosition = board.Tiles[position.x, position.y];
-            var lineSize = board.Tiles.GetLength(axis);
+            var tileAtPosition = board.Get(position);
+            var lineSize = board.GetSize()[axis];
 
             var matchSize = 1;
 
@@ -33,7 +32,7 @@ namespace Services
             for (var i = from + 1; i < to; i++)
             {
                 var currentPosition = position.WithValueAtAxis(i, axis);
-                if (tileAtPosition == board.Tiles.At(currentPosition))
+                if (tileAtPosition == board.Get(currentPosition))
                 {
                     matchSize++;
                 }
@@ -47,7 +46,7 @@ namespace Services
             for (var i = from - 1; i >= to; i--)
             {
                 var currentPosition = position.WithValueAtAxis(i, axis);
-                if (tileAtPosition == board.Tiles.At(currentPosition))
+                if (tileAtPosition == board.Get(currentPosition))
                 {
                     matchSize++;
                 }
@@ -60,12 +59,12 @@ namespace Services
             return matchSize;
         }
 
-        public List<Match> GetAllMatches(Board board)
+        public List<Match> GetAllMatches(Board.Board board)
         {
             var result = new List<Match>();
 
-            var width = board.Tiles.GetLength(0);
-            var height = board.Tiles.GetLength(1);
+            var width = board.GetSize().x;
+            var height = board.GetSize().y;
             for (var column = 0; column < width; column++)
             {
                 FindMatchesOnLine(board, new Vector3Int(column, 0), Axis.Y, result);
@@ -79,18 +78,18 @@ namespace Services
             return result;
         }
 
-        private static void FindMatchesOnLine(Board board, Vector3Int startPosition,
+        private static void FindMatchesOnLine(Board.Board board, Vector3Int startPosition,
             int axis, List<Match> result)
         {
-            var lineSize = board.Tiles.GetLength(axis);
+            var lineSize = board.GetSize()[axis];
             var matchSize = 1;
             for (var i = 1; i < lineSize; i++)
             {
                 var previousTileIndex = startPosition.WithValueAtAxis(i - 1, axis);
                 var currentTileIndex = startPosition.WithValueAtAxis(i, axis);
 
-                var previousTile = board.Tiles.At(previousTileIndex);
-                var currentTile = board.Tiles.At(currentTileIndex);
+                var previousTile = board.Get(previousTileIndex);
+                var currentTile = board.Get(currentTileIndex);
 
                 var isMatch = currentTile == previousTile && currentTile != null;
                 if (isMatch)

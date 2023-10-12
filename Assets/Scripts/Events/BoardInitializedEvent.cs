@@ -1,4 +1,4 @@
-﻿using Match3;
+﻿using Services.Board;
 
 namespace Events
 {

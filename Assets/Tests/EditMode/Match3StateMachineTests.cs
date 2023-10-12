@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using GameStates;
+﻿using GameStates;
 using Moq;
 using NUnit.Framework;
 using Services;
+using Services.Board;
 using Settings;
 using UniTaskPubSub;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace Tests.EditMode
     {
         private readonly Mock<ILevelSettings> _levelSettingsMock = new();
         private readonly Mock<ILevelSettingsProvider> _levelSettingsProviderMock = new();
-        private TileSettings[] _availableTiles;
+        private TileType[] _availableTiles;
         private ISwipeHandler _swipeHandler;
         private GameStateMachine _stateMachine;
 
@@ -22,7 +22,7 @@ namespace Tests.EditMode
         {
             _availableTiles = new[]
             {
-                new TileSettings(), new TileSettings(), new TileSettings()
+                new TileType(), new TileType(), new TileType()
             };
 
             var boardSize = new Vector2Int(10, 10);

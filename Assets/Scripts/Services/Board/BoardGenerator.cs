@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using Match3;
 using Settings;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
-namespace Services
+namespace Services.Board
 {
     public class BoardGenerator
     {
@@ -15,37 +13,37 @@ namespace Services
             _matchDetectionService = matchDetectionService;
         }
 
-        public Board Generate(Vector2Int size, TileSettings[] availableTiles)
+        public Board Generate(Vector2Int size, TileType[] availableTiles)
         {
-            var tiles = new TileSettings[size.x, size.y];
+            var tiles = new TileType[size.x, size.y];
             var board = new Board(tiles);
-            
+
             GenerateMatchFreeBoard(board, availableTiles);
 
             return board;
         }
 
-        public void FillEmptyTiles(Board board, TileSettings[] availableTiles)
+        public void FillEmptyTiles(Board board, TileType[] availableTiles)
         {
-            GenerateMatchFreeBoard(board, availableTiles, ignoreNotEmpty:true);
+            GenerateMatchFreeBoard(board, availableTiles, ignoreNotEmpty: true);
         }
 
-        private void GenerateMatchFreeBoard(Board board, 
-            TileSettings[] availableTiles, 
+        private void GenerateMatchFreeBoard(Board board,
+            TileType[] availableTiles,
             bool ignoreNotEmpty = false,
             bool strictMode = false)
         {
-            var tiles = board.Tiles;
-            var tilesForGeneration = new List<TileSettings>(availableTiles.Length);
-            for (var x = 0; x < tiles.GetLength(0); x++)
+            var size = board.GetSize();
+            var tilesForGeneration = new List<TileType>(availableTiles.Length);
+            for (var x = 0; x < size.x; x++)
             {
-                for (var y = 0; y < tiles.GetLength(1); y++)
+                for (var y = 0; y < size.y; y++)
                 {
-                    if (tiles[x, y] != null && ignoreNotEmpty)
+                    if (board.Get(x, y) != null && ignoreNotEmpty)
                     {
                         continue;
                     }
-                    
+
                     tilesForGeneration.Clear();
                     tilesForGeneration.AddRange(availableTiles);
                     SetRandomTileWithoutMatches(board, x, y, tilesForGeneration, strictMode);
@@ -53,21 +51,20 @@ namespace Services
             }
         }
 
-        private void SetRandomTileWithoutMatches(Board board, int x, int y, List<TileSettings> availableTiles, bool strict)
+        private void SetRandomTileWithoutMatches(Board board, int x, int y, IList<TileType> availableTiles, bool strict)
         {
-            var randomIndex = Random.Range(0, availableTiles.Count);
-            var randomTile = availableTiles[randomIndex];
-            
             while (availableTiles.Count > 0)
             {
-                randomIndex = Random.Range(0, availableTiles.Count);
-                board.Tiles[x, y] = availableTiles[randomIndex];
+                var randomIndex = Random.Range(0, availableTiles.Count);
+                var randomTile = availableTiles[randomIndex];
+                
+                board.Set(randomTile, x, y);
 
                 if (!_matchDetectionService.HasMatchAt(board, new Vector3Int(x, y)))
                 {
                     return;
                 }
-                
+
                 availableTiles.RemoveAt(randomIndex);
             }
 
@@ -75,8 +72,6 @@ namespace Services
             {
                 throw new BoardGenerationException("Failed to generate a match-free board.");
             }
-
-            board.Tiles[x, y] = randomTile;
         }
     }
 }

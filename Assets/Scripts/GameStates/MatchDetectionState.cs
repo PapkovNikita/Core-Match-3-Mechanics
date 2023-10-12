@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Services;
+using Services.Board;
 using StateMachine;
 
 namespace GameStates
 {
+    /// <summary>
+    /// Match Detection State:
+    /// - After a swap, check for matches in the grid.
+    /// - Identify all groups of 3 or more matched tiles.
+    /// </summary>
     public class MatchDetectionState : IState
     {
         private readonly MatchDetectionService _matchDetectionService;

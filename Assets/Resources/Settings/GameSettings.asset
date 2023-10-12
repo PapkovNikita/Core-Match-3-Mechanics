@@ -15,7 +15,7 @@ MonoBehaviour:
   <Levels>k__BackingField:
   - <Size>k__BackingField: {x: 10, y: 6}
     <AvailableTiles>k__BackingField:
-    - <Tile>k__BackingField: {fileID: 4672721810928963823, guid: ca8d6599531abf844a9f9c24c8405190, type: 3}
-    - <Tile>k__BackingField: {fileID: 5310155199438004052, guid: 7aa6a5a7df16dcd4a8c4226bd37bdf26, type: 3}
-    - <Tile>k__BackingField: {fileID: 4934976909227814524, guid: 7122fd9a303312d49aca669985f20bfc, type: 3}
-    - <Tile>k__BackingField: {fileID: 4934976909227814524, guid: 036c3e00a0db2a7458be1665c653ad00, type: 3}
+    - <ViewPrefab>k__BackingField: {fileID: 4672721810928963823, guid: ca8d6599531abf844a9f9c24c8405190, type: 3}
+    - <ViewPrefab>k__BackingField: {fileID: 5310155199438004052, guid: 7aa6a5a7df16dcd4a8c4226bd37bdf26, type: 3}
+    - <ViewPrefab>k__BackingField: {fileID: 4934976909227814524, guid: 7122fd9a303312d49aca669985f20bfc, type: 3}
+    - <ViewPrefab>k__BackingField: {fileID: 4934976909227814524, guid: 036c3e00a0db2a7458be1665c653ad00, type: 3}

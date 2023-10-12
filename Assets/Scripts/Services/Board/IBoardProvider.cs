@@ -1,6 +1,4 @@
-﻿using Match3;
-
-namespace Services
+﻿namespace Services.Board
 {
     public interface IBoardProvider
     {

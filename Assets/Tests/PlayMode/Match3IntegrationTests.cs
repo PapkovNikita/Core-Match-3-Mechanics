@@ -1,13 +1,11 @@
 using System.Collections;
-using Cysharp.Threading.Tasks;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using VContainer;
-using Object = UnityEngine.Object;
 
-public class Match3UITests
+public class Match3IntegrationTests
 {
     private IObjectResolver _resolver;
 
@@ -15,7 +13,7 @@ public class Match3UITests
     [UnitySetUp]
     public IEnumerator UnitySetUp()
     {
-        SceneManager.LoadScene("Match3UITestScene");
+        SceneManager.LoadScene("Match3IntegrationTestScene");
 
         yield return new WaitForSeconds(1f);
 
