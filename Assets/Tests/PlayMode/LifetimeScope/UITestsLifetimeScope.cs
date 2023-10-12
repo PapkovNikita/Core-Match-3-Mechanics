@@ -25,11 +25,12 @@ public class UITestsLifetimeScope : LifetimeScope
         builder.Register<MatchDetectionService>(Lifetime.Singleton);
         builder.Register<BoardPresenter>(Lifetime.Singleton);
         builder.Register<AsyncMessageBus>(Lifetime.Singleton);
-        builder.Register<FakeSwipeHandler>(Lifetime.Singleton).AsImplementedInterfaces();
         builder.Register<LevelSettingsProvider>(Lifetime.Singleton).AsImplementedInterfaces();
         builder.Register<BoardGenerator>(Lifetime.Singleton);
         builder.Register<MovesValidator>(Lifetime.Singleton);
         builder.Register<TestGameController>(Lifetime.Singleton);
+        
+        builder.Register<FakeSwipeHandler>(Lifetime.Singleton).AsImplementedInterfaces();
 
         builder.RegisterInstance(_grid);    
         builder.RegisterInstance(_gameSettings);

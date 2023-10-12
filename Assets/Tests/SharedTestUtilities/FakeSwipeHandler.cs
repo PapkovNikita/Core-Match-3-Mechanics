@@ -23,6 +23,8 @@ public class FakeSwipeHandler : ISwipeHandler
     {
         var boardSize = _levelSettings.Size; 
         
+        // For testing purposes, we sometimes swipe outside the board.
+        // Hence, the range is slightly larger than the board's borders.
         var x = Random.Range(-1, boardSize.x + 1);
         var y = Random.Range(-1, boardSize.y + 1);
         

@@ -9,17 +9,23 @@ public class Match3IntegrationTests
 {
     private IObjectResolver _resolver;
 
-
     [UnitySetUp]
     public IEnumerator UnitySetUp()
     {
-        SceneManager.LoadScene("Match3IntegrationTestScene");
+        SceneManager.LoadScene("Match3IntegrationTestScene", LoadSceneMode.Additive);
 
         yield return new WaitForSeconds(1f);
 
         var lifetimeScope = Object.FindObjectOfType<UITestsLifetimeScope>();
         Assert.IsNotNull(lifetimeScope, "Could not find LifetimeScope in the scene.");
         _resolver = lifetimeScope.Container;
+    }
+    
+    [UnityTearDown]
+    public IEnumerator UnityTearDown()
+    {
+        yield return SceneManager.UnloadSceneAsync("Match3IntegrationTestScene");
+        yield return new WaitForSeconds(1f);
     }
 
     [UnityTest]
@@ -35,6 +41,7 @@ public class Match3IntegrationTests
         {
             gameController.DoSwipe();
             yield return new WaitForSeconds(0.5f);
+            Debug.Log($"Move: {i}");
         }
 
         Assert.Pass();

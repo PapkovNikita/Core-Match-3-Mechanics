@@ -4,17 +4,6 @@ using UnityEngine;
 
 namespace Services.Board
 {
-    public class TileModel
-    {
-        public TileType Type { get; }
-        public Vector3Int Position { get; }
-
-        public TileModel(TileType tileType)
-        {
-            Type = tileType;
-        }
-    }
-    
     public class Board
     {
         private TileType[,] _tiles;
