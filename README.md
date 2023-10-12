@@ -14,7 +14,7 @@ I focused more on the code and architecture (extensibility, testability, perform
 
 **Demonstration of tests running in `EditMode`:**
 
-![EditMode](https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/f5a929cc-35c8-41a3-b7a5-9b4364035ac1)
+<img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/f5a929cc-35c8-41a3-b7a5-9b4364035ac1" width="300">
 
 
 ## Architecture
@@ -24,7 +24,9 @@ For the architecture, I chose a 2-Tier Architecture, which includes a model laye
 The model layer knows absolutely nothing about the game's interface layer. All interaction between the model and UI occurs through an event bus in a unidirectional manner, and if the game lacks an interface, nothing breaks. This makes testing convenient and quick.
 
 For game state management, I went with a state machine as a flexible tool, which clearly outlines responsibilities.
-![Screenshot_3](https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/15c3140f-bd59-4bf0-90c0-d40a0e317529)
+
+<img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/acb35573-2c3a-4567-b7e0-4cbd35d6ae0b" width="250"> 
+<img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/15c3140f-bd59-4bf0-90c0-d40a0e317529" width="550">
 
 If needed, you can quickly and easily add a new state, for instance, for handling and activating special tiles (like bombs and so on).
 
