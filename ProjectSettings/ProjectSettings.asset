@@ -764,7 +764,9 @@ PlayerSettings:
   webGLDecompressionFallback: 0
   webGLPowerPreference: 2
   scriptingDefineSymbols:
+    Android: UNITASK_DOTWEEN_SUPPORT
     Standalone: UNITASK_DOTWEEN_SUPPORT
+    iPhone: UNITASK_DOTWEEN_SUPPORT
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
