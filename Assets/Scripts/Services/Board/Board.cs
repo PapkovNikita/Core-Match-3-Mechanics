@@ -1,6 +1,7 @@
 ﻿using Common.Extensions;
 using Settings;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Services.Board
 {
@@ -22,16 +23,21 @@ namespace Services.Board
 
         public Vector2Int GetSize() => _boardSize;
 
-        public TileType GetTileType(int x, int y) => _tiles[x, y].Type;
+        public TileModel GetTile(Vector2Int position) => GetTile(position.x, position.y);
 
-        public TileModel GetTileModel(Vector2Int position) => GetTileModel(position.x, position.y);
+        public TileModel GetTile(int x, int y)
+        {
+            // just to make sure that tiles' position is always synchronized
+            Assert.AreEqual(x, _tiles[x, y].Position.x);
+            Assert.AreEqual(y, _tiles[x, y].Position.y);
 
-        public TileModel GetTileModel(int x, int y) => _tiles[x, y];
+            return _tiles[x, y];
+        }
 
-        public void Set(TileType type, int x, int y)
+        public void SetTile(TileType type, int x, int y)
         {
             _tiles[x, y].Position = new Vector2Int(x, y);
-            _tiles[x,y].Type = type;
+            _tiles[x, y].Type = type;
         }
 
         public void SwapTiles(Vector2Int first, Vector2Int second)

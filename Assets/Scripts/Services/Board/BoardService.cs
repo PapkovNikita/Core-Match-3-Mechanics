@@ -70,7 +70,7 @@ namespace Services.Board
 
             for (var i = height - 1; i >= 0; i--)
             {
-                var isEmptyTile = Board.GetTileType(column, i) == null;
+                var isEmptyTile = Board.GetTile(column, i).IsEmpty;
                 if (isEmptyTile)
                 {
                     countEmptyTiles++;

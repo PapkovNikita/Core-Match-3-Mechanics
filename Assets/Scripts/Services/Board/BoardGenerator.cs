@@ -38,7 +38,7 @@ namespace Services.Board
             {
                 for (var y = 0; y < size.y; y++)
                 {
-                    if (!board.GetTileModel(x, y).IsRemoved && ignoreNotEmpty)
+                    if (!board.GetTile(x, y).IsEmpty && ignoreNotEmpty)
                     {
                         continue;
                     }
@@ -57,7 +57,7 @@ namespace Services.Board
                 var randomIndex = Random.Range(0, availableTiles.Count);
                 var randomTile = availableTiles[randomIndex];
                 
-                board.Set(randomTile, x, y);
+                board.SetTile(randomTile, x, y);
 
                 if (!_matchDetectionService.HasMatchAt(board, new Vector2Int(x, y)))
                 {

@@ -10,7 +10,7 @@ namespace Services.Board
 
         public TileType Type { get; set; }
 
-        public bool IsRemoved => Type == null;
+        public bool IsEmpty => Type == null;
 
         public TileModel(int x, int y, TileType type)
         {
@@ -22,7 +22,7 @@ namespace Services.Board
 
         public bool Equals(TileModel other)
         {
-            return Position.Equals(other.Position) && Equals(Type, other.Type) && IsRemoved == other.IsRemoved;
+            return Position.Equals(other.Position) && Equals(Type, other.Type) && IsEmpty == other.IsEmpty;
         }
 
         public override bool Equals(object obj)
@@ -32,7 +32,7 @@ namespace Services.Board
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Position, Type, IsRemoved);
+            return HashCode.Combine(Position, Type, IsEmpty);
         }
 
         public static bool operator ==(TileModel left, TileModel right)

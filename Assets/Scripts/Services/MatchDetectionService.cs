@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Common;
 using Common.Extensions;
 using Common.Math;
+using Services.Board;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -23,8 +23,8 @@ namespace Services
 
         private static int GetMatchSizeByAxisAt(Board.Board board, Vector2Int position, int axis)
         {
-            var tileAtPosition = board.GetTileModel(position);
-            Assert.IsFalse(tileAtPosition.IsRemoved);
+            var tileAtPosition = board.GetTile(position);
+            Assert.IsFalse(tileAtPosition.IsEmpty);
             var lineSize = board.GetSize()[axis];
 
             var matchSize = 1;
@@ -34,9 +34,7 @@ namespace Services
 
             for (var i = from + 1; i < to; i++)
             {
-                var currentPosition = position.WithValueAtAxis(i, axis);
-                var currentTile = board.GetTileModel(currentPosition);
-                if (tileAtPosition.Type == currentTile.Type && !currentTile.IsRemoved)
+                if (IsMatch(board, position, axis, i, tileAtPosition))
                 {
                     matchSize++;
                 }
@@ -49,9 +47,7 @@ namespace Services
             to = Math.Max(position[axis] - MIN_MATCH_SIZE, 0);
             for (var i = from - 1; i >= to; i--)
             {
-                var currentPosition = position.WithValueAtAxis(i, axis);
-                var currentTile = board.GetTileModel(currentPosition);
-                if (tileAtPosition.Type == currentTile.Type && !currentTile.IsRemoved)
+                if (IsMatch(board, position, axis, i, tileAtPosition))
                 {
                     matchSize++;
                 }
@@ -62,6 +58,13 @@ namespace Services
             }
 
             return matchSize;
+        }
+
+        private static bool IsMatch(Board.Board board, Vector2Int position, int axis, int i, TileModel tileAtPosition)
+        {
+            var currentPosition = position.WithValueAtAxis(i, axis);
+            var currentTile = board.GetTile(currentPosition);
+            return tileAtPosition.Type == currentTile.Type && !currentTile.IsEmpty;
         }
 
         public List<Match> GetAllMatches(Board.Board board)
@@ -93,36 +96,39 @@ namespace Services
                 var previousTileIndex = startPosition.WithValueAtAxis(i - 1, axis);
                 var currentTileIndex = startPosition.WithValueAtAxis(i, axis);
 
-                var previousTile = board.GetTileModel(previousTileIndex);
-                var currentTile = board.GetTileModel(currentTileIndex);
+                var previousTile = board.GetTile(previousTileIndex);
+                var currentTile = board.GetTile(currentTileIndex);
 
-                var isMatch = currentTile.Type == previousTile.Type && !currentTile.IsRemoved && !previousTile.IsRemoved;
+                var isMatch = currentTile.Type == previousTile.Type && !currentTile.IsEmpty && !previousTile.IsEmpty;
                 if (isMatch)
                 {
                     matchSize++;
                 }
 
                 var isLastTile = i == lineSize - 1;
-                if (isMatch && !isLastTile)
+                if (isLastTile || !isMatch)
                 {
-                    continue;
+                    TrySaveNewMatch(currentTileIndex, matchSize, axis, isMatch, result);
+                    matchSize = 1;
+                }
+            }
+        }
+
+        private static void TrySaveNewMatch(Vector2Int currentPosition, int matchSize, int axis, 
+            bool isCurrentTileMatched, List<Match> result)
+        {
+            if (matchSize >= MIN_MATCH_SIZE)
+            {
+                var from = currentPosition.WithValueAtAxis(currentPosition[axis] - matchSize + 1, axis);
+                var to = currentPosition;
+
+                if (!isCurrentTileMatched)
+                {
+                    to[axis] = --to[axis];
+                    from[axis] = --from[axis];
                 }
 
-                if (matchSize >= MIN_MATCH_SIZE)
-                {
-                    var from = startPosition.WithValueAtAxis(i - matchSize, axis);
-                    var to = startPosition.WithValueAtAxis(i - 1, axis);
-
-                    if (isMatch)
-                    {
-                        from[axis] = ++from[axis];
-                        to[axis] = ++to[axis];
-                    }
-
-                    result.Add(new Match(from, to));
-                }
-
-                matchSize = 1;
+                result.Add(new Match(from, to));
             }
         }
     }

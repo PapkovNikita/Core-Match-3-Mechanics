@@ -52,7 +52,7 @@ public class FakeBoardGenerator : IBoardGenerator
             for (var y = 0; y < _tiles.GetLength(1); y++)
             {
                 var type = _tiles[x, y];
-                board.Set(type, x, y);
+                board.SetTile(type, x, y);
             }
         }
 

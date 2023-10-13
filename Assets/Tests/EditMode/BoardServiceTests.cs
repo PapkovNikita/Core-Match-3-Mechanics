@@ -143,15 +143,15 @@ namespace Tests.EditMode
             boardService.GenerateBoard(_levelSettingsMock.Object);
             var matches = new List<Services.Match>
             {
-                new Services.Match(new Vector2Int(0, 0), new Vector2Int(0, 0)),
-                new Services.Match(new Vector2Int(4, 4), new Vector2Int(4, 4))
+                new(new Vector2Int(0, 0), new Vector2Int(0, 0)),
+                new(new Vector2Int(4, 4), new Vector2Int(4, 4))
             };
             boardService.RemoveTiles(matches);
             
             boardService.FillEmptyTiles(_availableTiles);
 
-            Assert.IsFalse(boardService.Board.GetTileModel(0, 0).IsRemoved);
-            Assert.IsFalse(boardService.Board.GetTileModel(4, 4).IsRemoved);
+            Assert.IsFalse(boardService.Board.GetTile(0, 0).IsEmpty);
+            Assert.IsFalse(boardService.Board.GetTile(4, 4).IsEmpty);
         }
     }
 }

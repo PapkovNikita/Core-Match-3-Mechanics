@@ -53,7 +53,7 @@ namespace Views
 
         private Tweener ShowNewTile(Board board, int x, int y)
         {
-            var tileModel = board.GetTileModel(x, y);
+            var tileModel = board.GetTile(x, y);
             var tileType = tileModel.Type;
 
             var tile = _pool.Get(tileType, tileType.ViewPrefab);
@@ -102,7 +102,7 @@ namespace Views
             for (var y = 0; y < _tileViews.GetLength(1); y++)
             {
                 var view = _tileViews[x, y];
-                if (view == null || !view.Model.IsRemoved)
+                if (view == null || !view.Model.IsEmpty)
                 {
                     continue;
                 }
