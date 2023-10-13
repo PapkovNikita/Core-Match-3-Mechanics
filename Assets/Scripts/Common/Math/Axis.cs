@@ -1,4 +1,4 @@
-﻿namespace Misc
+﻿namespace Common.Math
 {
     public static class Axis
     {

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Extensions.UniRx
+namespace Common.Extensions
 {
     /// <summary>
     /// source : https://github.com/neuecc/UniRx/blob/master/Assets/Plugins/UniRx/Scripts/Disposables/CompositeDisposable.cs

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Extensions
+namespace Common.Extensions
 {
     public static class ArrayExtensions
     {

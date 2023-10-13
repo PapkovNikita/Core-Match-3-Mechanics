@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Extensions;
-using Misc;
+using Common;
+using Common.Extensions;
+using Common.Math;
 using UnityEngine;
 using UnityEngine.Assertions;
 

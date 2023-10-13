@@ -1,7 +1,9 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using Common.Extensions;
+using Common.Pool;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Extensions;
 using Services.Board;
+using Settings;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VContainer;
@@ -16,9 +18,15 @@ namespace Views
         [SerializeField] private float _removalAnimationDuration = 0.5f;
         [SerializeField] private float _fallDurationPerMeter = 0.2f;
 
+        private MultiInstancePool<TileType, TileView> _pool;
         private TileView[,] _tileViews;
         private Grid _grid;
         private Board _board;
+
+        private void Awake()
+        {
+            _pool = new MultiInstancePool<TileType, TileView>(transform);
+        }
 
         [Inject]
         public void Construct(Grid grid)

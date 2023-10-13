@@ -1,5 +1,5 @@
 ﻿using System;
-using Extensions;
+using Common.Extensions;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VContainer.Unity;

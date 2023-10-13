@@ -1,4 +1,5 @@
 ﻿using Services.Board;
+using Settings;
 using UnityEngine;
 
 namespace Views

@@ -1,7 +1,7 @@
 ﻿using System;
+using Common.Extensions;
 using Cysharp.Threading.Tasks;
 using Events;
-using Extensions.UniRx;
 using UniTaskPubSub;
 
 namespace Views
