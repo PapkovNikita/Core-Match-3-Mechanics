@@ -25,7 +25,7 @@ The model layer knows absolutely nothing about the game's interface layer. All i
 
 For game state management, I went with a state machine as a flexible tool, which clearly outlines responsibilities.
 
-<img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/acb35573-2c3a-4567-b7e0-4cbd35d6ae0b" width="250"> 
+<img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/dac786f9-dc3b-4a7b-aaa5-a96057cc48ff" width="250"> 
 <img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/15c3140f-bd59-4bf0-90c0-d40a0e317529" width="550">
 
 If needed, you can quickly and easily add a new state, for instance, for handling and activating special tiles (like bombs and so on).
@@ -37,13 +37,3 @@ You might also find the following classes interesting:
 - **BoardGenerator** - Responsible for generating tiles without initial matches
 - **MatchDetectionService** - Handles match detection on the board
 - **SwipeHandler** - Manages game swipes
-
-## Drawbacks
-
-Drawbacks of the current implementation:
-
-- It's clear that a tile pool should be used.
-- It's beneficial to create a separate model for tiles (with their position and state) and update the UI accordingly. This will greatly simplify the BoardView and essentially remove all its logic.
-- The feature to check available moves for the user hasn't been implemented yet.
-
-All these drawbacks can be fixed within 1-2 hours. I will try to address them as soon as I have some free time.
