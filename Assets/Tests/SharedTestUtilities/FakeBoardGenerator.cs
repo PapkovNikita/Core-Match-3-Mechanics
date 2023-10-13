@@ -1,27 +1,23 @@
 ﻿using System;
 using Services.Board;
 using Settings;
+using UnityEngine;
 
-public class BoardBuilder
+public class FakeBoardGenerator : IBoardGenerator
 {
-    private readonly TileType[] _availableTiles;
-    private readonly TileType[,] _tiles;
+    private TileType[] _availableTiles;
+    private TileType[,] _tiles;
     private int _currentRowIndex;
-    private Board _board;
 
-    public BoardBuilder(int width, int height, TileType[] availableTilesArray)
+    public FakeBoardGenerator Setup(int width, int height, TileType[] availableTilesArray)
     {
         _tiles = new TileType[width, height];
         _availableTiles = availableTilesArray;
-    }
-
-    public BoardBuilder RewriteExistingBoard(Board board)
-    {
-        _board = board;
+        _currentRowIndex = 0;
         return this;
     }
-    
-    public BoardBuilder SetupNextRow(params int?[] tileIndices)
+
+    public FakeBoardGenerator SetupNextRow(params int?[] tileIndices)
     {
         if (tileIndices.Length != _tiles.GetLength(0) || _currentRowIndex >= _tiles.GetLength(1))
         {
@@ -37,7 +33,7 @@ public class BoardBuilder
                 {
                     throw new InvalidOperationException($"Invalid tile index in the row ({tileIndex}).");
                 }
-                
+
                 _tiles[colIndex, _currentRowIndex] = _availableTiles[tileIndex];
             }
         }
@@ -46,14 +42,30 @@ public class BoardBuilder
         return this;
     }
 
-    public Board Build()
+    public Board Generate()
     {
-        if (_board == null)
+        var realBoardSize = new Vector2Int(_tiles.GetLength(0), _tiles.GetLength(1));
+        var board = new Board(realBoardSize);
+
+        for (var x = 0; x < _tiles.GetLength(0); x++)
         {
-            return new Board(_tiles);
+            for (var y = 0; y < _tiles.GetLength(1); y++)
+            {
+                var type = _tiles[x, y];
+                board.Set(type, x, y);
+            }
         }
-        
-        _board.Initialize(_tiles);
-        return _board;
+
+        return board;
+    }
+
+    public Board Generate(Vector2Int size, TileType[] availableTiles)
+    {
+        return Generate();
+    }
+
+    public void FillEmptyTiles(Board board, TileType[] availableTiles)
+    {
+        throw new NotImplementedException();
     }
 }

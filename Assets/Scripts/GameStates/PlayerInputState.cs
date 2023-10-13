@@ -72,15 +72,15 @@ namespace GameStates
             await _stateMachine.Enter<SwapState, SwapStateContext>(context);
         }
 
-        private static Vector3Int GetSwipeDirection(SwipeData swipe)
+        private static Vector2Int GetSwipeDirection(SwipeData swipe)
         {
             var directionY = Math.Sign(swipe.EndIndex.y - swipe.StartIndex.y);
             var directionX = Math.Sign(swipe.EndIndex.x - swipe.StartIndex.x);
-            var direction = new Vector3Int(directionX, directionY);
+            var direction = new Vector2Int(directionX, directionY);
             return direction;
         }
 
-        private bool IsOutsideBoard(Vector3Int index)
+        private bool IsOutsideBoard(Vector2Int index)
         {
             return index.x < 0 || index.x >= _levelSettings.Size.x ||
                    index.y < 0 || index.y >= _levelSettings.Size.y;

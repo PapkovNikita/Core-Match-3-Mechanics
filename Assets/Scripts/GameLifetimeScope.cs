@@ -26,8 +26,8 @@ public class GameLifetimeScope : LifetimeScope
         builder.Register<BoardPresenter>(Lifetime.Singleton);
         builder.Register<AsyncMessageBus>(Lifetime.Singleton);
         builder.Register<SwipeHandler>(Lifetime.Singleton).AsImplementedInterfaces();
-        builder.Register<LevelSettingsProvider>(Lifetime.Singleton).AsImplementedInterfaces();
-        builder.Register<BoardGenerator>(Lifetime.Singleton);
+        builder.Register<LevelSettingsProvider>(Lifetime.Singleton).AsImplementedInterfaces();        
+        builder.Register<BoardGenerator>(Lifetime.Singleton).AsImplementedInterfaces();
         builder.Register<MovesValidator>(Lifetime.Singleton);
         
         builder.RegisterInstance(_grid);    

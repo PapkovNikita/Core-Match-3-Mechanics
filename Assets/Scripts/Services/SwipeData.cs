@@ -4,10 +4,10 @@ namespace Services
 {
     public struct SwipeData
     {
-        public Vector3Int StartIndex;
-        public Vector3Int EndIndex;
+        public Vector2Int StartIndex;
+        public Vector2Int EndIndex;
 
-        public SwipeData(Vector3Int startIndex, Vector3Int endIndex)
+        public SwipeData(Vector2Int startIndex, Vector2Int endIndex)
         {
             StartIndex = startIndex;
             EndIndex = endIndex;

@@ -7,11 +7,11 @@ namespace Services.Board
 {
     public class BoardService : IBoardProvider
     {
-        public Board Board { get; private set; } = new(null);
+        public Board Board { get; private set; }
         
-        private readonly BoardGenerator _boardGenerator;
+        private readonly IBoardGenerator _boardGenerator;
 
-        public BoardService(BoardGenerator boardGenerator)
+        public BoardService(IBoardGenerator boardGenerator)
         {
             _boardGenerator = boardGenerator;
         }
@@ -26,7 +26,7 @@ namespace Services.Board
             _boardGenerator.FillEmptyTiles(Board, availableTiles);
         }
 
-        public void SwapTiles(Vector3Int first, Vector3Int second)
+        public void SwapTiles(Vector2Int first, Vector2Int second)
         {
             Board.SwapTiles(first, second);
         }
@@ -70,15 +70,15 @@ namespace Services.Board
 
             for (var i = height - 1; i >= 0; i--)
             {
-                var isEmptyTile = Board.Get(column, i) == null;
+                var isEmptyTile = Board.GetTileType(column, i) == null;
                 if (isEmptyTile)
                 {
                     countEmptyTiles++;
                 }
                 else if (countEmptyTiles > 0)
                 {
-                    var currentTilePosition = new Vector3Int(column, i);
-                    var emptyPlace = new Vector3Int(column, i + countEmptyTiles);
+                    var currentTilePosition = new Vector2Int(column, i);
+                    var emptyPlace = new Vector2Int(column, i + countEmptyTiles);
                     Board.SwapTiles(emptyPlace, currentTilePosition);
                 }
             }

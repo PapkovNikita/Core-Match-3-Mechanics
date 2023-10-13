@@ -1,154 +1,157 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using Moq;
+using NUnit.Framework;
 using Services;
 using Services.Board;
 using Settings;
+using UnityEngine;
 
 namespace Tests.EditMode
 {
     [TestFixture]
     public class BoardServiceTests
     {
+        private readonly Mock<ILevelSettings> _levelSettingsMock = new();
         private TileType[] _availableTiles;
-        private BoardGenerator _boardGenerator;
+        private FakeBoardGenerator _boardGenerator;
 
         [SetUp]
         public void SetUp()
         {
-            _boardGenerator = new BoardGenerator(new MatchDetectionService());
+            _boardGenerator = new FakeBoardGenerator();
+            
             _availableTiles = new[]
             {
                 new TileType(), new TileType(), new TileType()
             };
+
+            _levelSettingsMock.Setup(x => x.AvailableTiles).Returns(_availableTiles);
+            _levelSettingsMock.Setup(x => x.Size).Returns(new Vector2Int(5,5));
         }
 
         [Test]
         public void RemoveTiles_GivenBoardWithSeveralMatches_RemovedAllMatches()
         {
             var boardService = new BoardService(_boardGenerator);
-            var board = new BoardBuilder(5, 5, _availableTiles)
+            _boardGenerator.Setup(5, 5, _availableTiles)
                 .SetupNextRow(0, 0, 2, 0, 1)
                 .SetupNextRow(0, 1, 2, 0, 1)
                 .SetupNextRow(0, 1, 2, 0, 1)
                 .SetupNextRow(1, 2, 0, 1, 2)
-                .SetupNextRow(1, 1, 1, 1, 2)
-                .RewriteExistingBoard(boardService.Board)
-                .Build();
+                .SetupNextRow(1, 1, 1, 1, 2);
 
+            boardService.GenerateBoard(_levelSettingsMock.Object);
             var matchesService = new MatchDetectionService();
             var matches = matchesService.GetAllMatches(boardService.Board);
             boardService.RemoveTiles(matches);
 
-            var expectedBoard = new BoardBuilder(5, 5, _availableTiles)
+            var expectedBoard = _boardGenerator.Setup(5, 5, _availableTiles)
                 .SetupNextRow(null, 0, null, null, null)
                 .SetupNextRow(null, 1, null, null, null)
                 .SetupNextRow(null, 1, null, null, null)
                 .SetupNextRow(1, 2, 0, 1, 2)
                 .SetupNextRow(null, null, null, null, 2)
-                .RewriteExistingBoard(boardService.Board)
-                .Build();
+                .Generate();
 
-            Assert.AreEqual(expectedBoard, board);
+            Assert.AreEqual(expectedBoard, boardService.Board);
         }
 
         [Test]
         public void FallTiles_GivenBoardWithMissingRow_FallTilesCorrectly()
         {
             var boardService = new BoardService(_boardGenerator);
-            var board = new BoardBuilder(3, 5, _availableTiles)
+            _boardGenerator.Setup(3, 5, _availableTiles)
                 .SetupNextRow(0, 0, 1)
                 .SetupNextRow(0, 1, 1)
                 .SetupNextRow(null, null, null)
                 .SetupNextRow(1, 2, 2)
-                .SetupNextRow(1, 1, 2)
-                .RewriteExistingBoard(boardService.Board)
-                .Build();
-
+                .SetupNextRow(1, 1, 2);
+            
+            boardService.GenerateBoard(_levelSettingsMock.Object);
             boardService.FallTiles();
 
-            var newExpectedBoard = new BoardBuilder(3, 5, _availableTiles)
+            var newExpectedBoard = _boardGenerator.Setup(3, 5, _availableTiles)
                 .SetupNextRow(null, null, null)
                 .SetupNextRow(0, 0, 1)
                 .SetupNextRow(0, 1, 1)
                 .SetupNextRow(1, 2, 2)
                 .SetupNextRow(1, 1, 2)
-                .Build();
+                .Generate();
 
-            Assert.AreEqual(newExpectedBoard, board);
+            Assert.AreEqual(newExpectedBoard, boardService.Board);
         }
 
         [Test]
         public void FallTiles_GivenBoardWithThreeMissingRows_FallTilesCorrectly()
         {
             var boardService = new BoardService(_boardGenerator);
-            var board = new BoardBuilder(3, 5, _availableTiles)
+            _boardGenerator.Setup(3, 5, _availableTiles)
                 .SetupNextRow(0, 0, 1)
                 .SetupNextRow(0, 1, 1)
                 .SetupNextRow(null, null, null)
                 .SetupNextRow(null, null, null)
-                .SetupNextRow(null, null, null)
-                .RewriteExistingBoard(boardService.Board)
-                .Build();
+                .SetupNextRow(null, null, null);
 
+            boardService.GenerateBoard(_levelSettingsMock.Object);
             boardService.FallTiles();
 
-            var newExpectedBoard = new BoardBuilder(3, 5, _availableTiles)
+            var newExpectedBoard = _boardGenerator.Setup(3, 5, _availableTiles)
                 .SetupNextRow(null, null, null)
                 .SetupNextRow(null, null, null)
                 .SetupNextRow(null, null, null)
                 .SetupNextRow(0, 0, 1)
                 .SetupNextRow(0, 1, 1)
-                .Build();
+                .Generate();
 
-            Assert.AreEqual(newExpectedBoard, board);
+            Assert.AreEqual(newExpectedBoard, boardService.Board);
         }
 
         [Test]
         public void FallTiles_GivenBoardWithThreeGaps_FallTilesCorrectly()
         {
             var boardService = new BoardService(_boardGenerator);
-            var board = new BoardBuilder(3, 6, _availableTiles)
+            _boardGenerator.Setup(3, 6, _availableTiles)
                 .SetupNextRow(0, 0, 1)
                 .SetupNextRow(null, null, null)
                 .SetupNextRow(0, 1, 1)
                 .SetupNextRow(null, null, null)
                 .SetupNextRow(2, 2, 2)
-                .SetupNextRow(null, null, null)
-                .RewriteExistingBoard(boardService.Board)
-                .Build();
+                .SetupNextRow(null, null, null);
 
+            boardService.GenerateBoard(_levelSettingsMock.Object);
             boardService.FallTiles();
 
-            var newExpectedBoard = new BoardBuilder(3, 6, _availableTiles)
+            var newExpectedBoard = _boardGenerator.Setup(3, 6, _availableTiles)
                 .SetupNextRow(null, null, null)
                 .SetupNextRow(null, null, null)
                 .SetupNextRow(null, null, null)
                 .SetupNextRow(0, 0, 1)
                 .SetupNextRow(0, 1, 1)
                 .SetupNextRow(2, 2, 2)
-                .Build();
+                .Generate();
 
-            Assert.AreEqual(newExpectedBoard, board);
+            Assert.AreEqual(newExpectedBoard, boardService.Board);
         }
 
         [Test]
         public void FillEmptyTiles_GivenBoardWithMissingTiles_MissingTilesFilledProperly()
         {
-            var boardService = new BoardService(_boardGenerator);
-            var board = new BoardBuilder(3, 5, _availableTiles)
-                .SetupNextRow(0, 0, 1)
-                .SetupNextRow(0, 1, 1)
-                .SetupNextRow(null, 1, 2)
-                .SetupNextRow(1, 1, null)
-                .SetupNextRow(null, 2, null)
-                .RewriteExistingBoard(boardService.Board)
-                .Build();
-
+            var matchDetectionService = new MatchDetectionService();
+            var boardGenerator = new BoardGenerator(matchDetectionService);
+            var boardService = new BoardService(boardGenerator);
+            
+            boardService.GenerateBoard(_levelSettingsMock.Object);
+            var matches = new List<Services.Match>
+            {
+                new Services.Match(new Vector2Int(0, 0), new Vector2Int(0, 0)),
+                new Services.Match(new Vector2Int(4, 4), new Vector2Int(4, 4))
+            };
+            boardService.RemoveTiles(matches);
+            
             boardService.FillEmptyTiles(_availableTiles);
 
-            Assert.IsNotNull(board.Get(2, 0));
-            Assert.IsNotNull(board.Get(2, 2));
-            Assert.IsNotNull(board.Get(0, 4));
-            Assert.IsNotNull(board.Get(2, 4));
+            Assert.IsFalse(boardService.Board.GetTileModel(0, 0).IsRemoved);
+            Assert.IsFalse(boardService.Board.GetTileModel(4, 4).IsRemoved);
         }
     }
 }

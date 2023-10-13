@@ -8,7 +8,7 @@ using VContainer;
 using VContainer.Unity;
 using Views;
 
-public class UITestsLifetimeScope : LifetimeScope
+public class IntegrationTestsLifetimeScope : LifetimeScope
 {
     [SerializeField] private GameSettings _gameSettings;
     [SerializeField] private Grid _grid;
@@ -26,7 +26,7 @@ public class UITestsLifetimeScope : LifetimeScope
         builder.Register<BoardPresenter>(Lifetime.Singleton);
         builder.Register<AsyncMessageBus>(Lifetime.Singleton);
         builder.Register<LevelSettingsProvider>(Lifetime.Singleton).AsImplementedInterfaces();
-        builder.Register<BoardGenerator>(Lifetime.Singleton);
+        builder.Register<BoardGenerator>(Lifetime.Singleton).AsImplementedInterfaces();
         builder.Register<MovesValidator>(Lifetime.Singleton);
         builder.Register<TestGameController>(Lifetime.Singleton);
         

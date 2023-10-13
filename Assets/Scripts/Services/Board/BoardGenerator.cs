@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Services.Board
 {
-    public class BoardGenerator
+    public class BoardGenerator : IBoardGenerator
     {
         private readonly MatchDetectionService _matchDetectionService;
 
@@ -15,8 +15,7 @@ namespace Services.Board
 
         public Board Generate(Vector2Int size, TileType[] availableTiles)
         {
-            var tiles = new TileType[size.x, size.y];
-            var board = new Board(tiles);
+            var board = new Board(size);
 
             GenerateMatchFreeBoard(board, availableTiles);
 
@@ -39,7 +38,7 @@ namespace Services.Board
             {
                 for (var y = 0; y < size.y; y++)
                 {
-                    if (board.Get(x, y) != null && ignoreNotEmpty)
+                    if (!board.GetTileModel(x, y).IsRemoved && ignoreNotEmpty)
                     {
                         continue;
                     }
@@ -60,7 +59,7 @@ namespace Services.Board
                 
                 board.Set(randomTile, x, y);
 
-                if (!_matchDetectionService.HasMatchAt(board, new Vector3Int(x, y)))
+                if (!_matchDetectionService.HasMatchAt(board, new Vector2Int(x, y)))
                 {
                     return;
                 }

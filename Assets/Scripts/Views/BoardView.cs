@@ -3,6 +3,7 @@ using DG.Tweening;
 using Extensions;
 using Services.Board;
 using UnityEngine;
+using UnityEngine.Assertions;
 using VContainer;
 
 namespace Views
@@ -34,11 +35,9 @@ namespace Views
 
             var showingSequence = DOTween.Sequence();
             for (var x = 0; x < width; x++)
+            for (var y = height - 1; y >= 0; y--)
             {
-                for (var y = height - 1; y >= 0; y--)
-                {
-                    showingSequence.Join(ShowNewTile(board, x, y));
-                }
+                showingSequence.Join(ShowNewTile(board, x, y));
             }
 
             return showingSequence.ToUniTask();
@@ -46,23 +45,24 @@ namespace Views
 
         private Tweener ShowNewTile(Board board, int x, int y)
         {
-            var tileSettings = board.Get(x, y);
-            
-            // TODO: I understand that it's critically important to use a pool here,
-            // but in this case, I'm not doing it jut to save time
-            var tile = Instantiate(tileSettings.ViewPrefab, transform);
+            var tileModel = board.GetTileModel(x, y);
+            var tileType = tileModel.Type;
+
+            var tile = _pool.Get(tileType, tileType.ViewPrefab);
             var tileTransform = tile.transform;
 
             var tileIndex = new Vector3Int(x, y);
             tileTransform.position = _grid.GetCellCenterWorld(tileIndex);
             tileTransform.localScale = Vector3.zero;
-            
+
+            tile.Initialize(tileModel);
+
             _tileViews[x, y] = tile;
-            
+
             return tile.transform.DOScale(Vector3.one, _appearingAnimationDuration);
         }
 
-        public UniTask ShowSuccessfulSwapAnimation(Vector3Int first, Vector3Int second)
+        public UniTask ShowSuccessfulSwapAnimation(Vector2Int first, Vector2Int second)
         {
             var firstTile = _tileViews[first.x, first.y];
             var secondTile = _tileViews[second.x, second.y];
@@ -74,7 +74,7 @@ namespace Views
                 .ToUniTask();
         }
 
-        public UniTask ShowFailSwapAnimation(Vector3Int first, Vector3Int second)
+        public UniTask ShowFailSwapAnimation(Vector2Int first, Vector2Int second)
         {
             var firstTile = _tileViews[first.x, first.y];
             var secondTile = _tileViews[second.x, second.y];
@@ -90,27 +90,25 @@ namespace Views
         {
             var sequence = DOTween.Sequence();
 
-            for (var i = 0; i < _board.GetSize().x; i++)
+            for (var x = 0; x < _tileViews.GetLength(0); x++)
+            for (var y = 0; y < _tileViews.GetLength(1); y++)
             {
-                for (var j = 0; j < _board.GetSize().y; j++)
+                var view = _tileViews[x, y];
+                if (view == null || !view.Model.IsRemoved)
                 {
-                    var tile = _board.Get(i, j);
-                    if (tile != null)
-                    {
-                        continue;
-                    }
-
-                    if (_tileViews[i, j] == null)
-                    {
-                        continue;
-                    }
-
-                    var tileView = _tileViews[i, j];
-                    // TODO: return the view to the pool
-                    sequence.Join(tileView.transform.DOScale(Vector3.zero, _removalAnimationDuration));
-                    
-                    _tileViews[i, j] = null;
+                    continue;
                 }
+
+                Assert.AreEqual(x, view.Model.Position.x);
+                Assert.AreEqual(y, view.Model.Position.y);
+
+                var removalAnimation = view.transform
+                    .DOScale(Vector3.zero, _removalAnimationDuration)
+                    .OnComplete(() => _pool.Release(view.InitialType, view));
+                
+                sequence.Join(removalAnimation);
+
+                _tileViews[x, y] = null;
             }
 
             return sequence.ToUniTask();
@@ -119,54 +117,59 @@ namespace Views
         public UniTask ShowFallAnimation()
         {
             var fallSequence = DOTween.Sequence();
-            
-            // TODO: this place looks quite similar to BoardService.FallTilesInColumn 
-            // I can get rid of it, but for this I need to create some TileModel with its position
-            // and make my view just following this model
+
             for (var x = 0; x < _tileViews.GetLength(0); x++)
             {
-                var countEmptyTiles = 0;
                 var height = _tileViews.GetLength(1);
                 for (var y = height - 1; y >= 0; y--)
                 {
                     var tileView = _tileViews[x, y];
                     if (tileView == null)
                     {
-                        countEmptyTiles++;
+                        continue;
                     }
-                    else if (countEmptyTiles > 0)
-                    {
-                        _tileViews[x, y + countEmptyTiles] = _tileViews[x, y];
-                        _tileViews[x, y] = null;
-                        
-                        var currentPosition = tileView.transform.position;
-                        var newIndex = new Vector3Int(x, y + countEmptyTiles);
-                        var targetPosition = _grid.GetCellCenterWorld(newIndex);
-                        var distance = Vector3.Distance(currentPosition, targetPosition);
-                        var duration = distance * _fallDurationPerMeter;
+                    
+                    var tileModel = tileView.Model;
+                    var tilePosition = new Vector2Int(x, y);
 
-                        fallSequence.Join(tileView.transform.DOMove(targetPosition, duration));
+                    if (tilePosition == tileModel.Position)
+                    {
+                        continue;
                     }
+                    
+                    _tileViews[tileModel.Position.x, tileModel.Position.y] = _tileViews[x, y];
+                    _tileViews[x, y] = null;
+
+                    fallSequence.Join(ShowFallAnimation(tileView, tileModel.Position));
                 }
             }
 
             return fallSequence.ToUniTask();
         }
 
+        private Tweener ShowFallAnimation(TileView tileView, Vector2Int position)
+        {
+            var currentWorldPosition = tileView.transform.position;
+            var targetWorldPosition = _grid.GetCellCenterWorld(position.ToVector3Int());
+            var distance = Vector3.Distance(currentWorldPosition, targetWorldPosition);
+            var duration = distance * _fallDurationPerMeter;
+
+            return tileView.transform.DOMove(targetWorldPosition, duration);
+        }
+
         public UniTask ShowNewTiles()
         {
             var sequence = DOTween.Sequence();
-            
+
             var width = _board.GetSize().x;
             var height = _board.GetSize().y;
+
             for (var x = 0; x < width; x++)
+            for (var y = height - 1; y >= 0; y--)
             {
-                for (var y = height - 1; y >= 0; y--)
+                if (_tileViews[x, y] == null)
                 {
-                    if (_tileViews[x, y] == null)
-                    {
-                        sequence.Join(ShowNewTile(_board, x, y));
-                    }
+                    sequence.Join(ShowNewTile(_board, x, y));
                 }
             }
 

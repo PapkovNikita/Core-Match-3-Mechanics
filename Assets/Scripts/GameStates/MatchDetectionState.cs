@@ -13,8 +13,8 @@ namespace GameStates
     public class MatchDetectionState : IState
     {
         private readonly MatchDetectionService _matchDetectionService;
-        private StateMachine.StateMachine _stateMachine;
         private readonly IBoardProvider _boardProvider;
+        private StateMachine.StateMachine _stateMachine;
 
         public MatchDetectionState(
             IBoardProvider boardProvider,

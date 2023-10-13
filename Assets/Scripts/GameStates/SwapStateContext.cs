@@ -4,10 +4,10 @@ namespace GameStates
 {
     public struct SwapStateContext
     {
-        public Vector3Int FirstTile { get; }
-        public Vector3Int SecondTile { get; }
+        public Vector2Int FirstTile { get; }
+        public Vector2Int SecondTile { get; }
 
-        public SwapStateContext(Vector3Int firstTile, Vector3Int secondTile)
+        public SwapStateContext(Vector2Int firstTile, Vector2Int secondTile)
         {
             FirstTile = firstTile;
             SecondTile = secondTile;

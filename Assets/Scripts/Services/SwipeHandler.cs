@@ -1,4 +1,5 @@
 ﻿using System;
+using Extensions;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VContainer.Unity;
@@ -30,7 +31,7 @@ namespace Services
                 var startPosition = Camera.main!.ScreenToWorldPoint(Input.mousePosition);
                 _currentSwipe = new SwipeData
                 {
-                    StartIndex = _grid.WorldToCell(startPosition)
+                    StartIndex = _grid.WorldToCell(startPosition).ToVector2Int()
                 };
                 
                 _isSwipeStarted = true;
@@ -39,7 +40,7 @@ namespace Services
             if (_isSwipeStarted && Input.GetMouseButtonUp(0))
             {
                 var endPosition = Camera.main!.ScreenToWorldPoint(Input.mousePosition);
-                _currentSwipe.EndIndex = _grid.WorldToCell(endPosition);
+                _currentSwipe.EndIndex = _grid.WorldToCell(endPosition).ToVector2Int();
                 Swiped?.Invoke(_currentSwipe);
                 
                 _isSwipeStarted = false;

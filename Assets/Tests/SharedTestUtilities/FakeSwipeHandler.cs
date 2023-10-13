@@ -19,7 +19,7 @@ public class FakeSwipeHandler : ISwipeHandler
         Swiped?.Invoke(swipe);
     }
 
-    private Vector3Int GenerateRandomPosition()
+    private Vector2Int GenerateRandomPosition()
     {
         var boardSize = _levelSettings.Size; 
         
@@ -28,7 +28,7 @@ public class FakeSwipeHandler : ISwipeHandler
         var x = Random.Range(-1, boardSize.x + 1);
         var y = Random.Range(-1, boardSize.y + 1);
         
-        return new Vector3Int(x, y);
+        return new Vector2Int(x, y);
     }
 
     public event Action<SwipeData> Swiped;
