@@ -2,24 +2,46 @@
 
 I focused more on the code and architecture (extensibility, testability, performance) rather than the game itself. As a result, visually, it appears as simple as possible with basic Match-3 mechanics.
 
-**Demonstration of the results:**
+<table>
+    <tr>
+        <td>
+          Demonstration of the results:
+        </td>
+        <td>
+          Integrational test example: <br> <i>(Performs 1000000 random swaps)</i>
+        </td>
+        <td>
+          Unit tests:
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/8ae4af45-62ec-4e35-b6bd-5acdf1bffc23" width="400">
+        </td>
+        <td>
+          <img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/e1e93024-31ca-4199-8e30-6d5d05e5b675" width="400">
+        </td>
+        <td>
+          <img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/f5a929cc-35c8-41a3-b7a5-9b4364035ac1">
+        </td>
+    </tr>
+</table>
 
-[![Result](https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/8ae4af45-62ec-4e35-b6bd-5acdf1bffc23)](https://youtu.be/7gAi5-uHfJ8)
+## Stack
 
-**Demonstration of tests running in `PlayMode`:**
+- **Unity 2021.3.16f1**
+- **VContainer** (a lightweight, fast DIContainer with code generation capability)
+- **UniTask** (a more convenient and modern alternative to coroutines and callbacks)
+- **UniTaskPubSub** (an asynchronous MessageBroker to fully separate the UI and Model layers)
+- **DoTween** (for various animations)
 
-[![PlayModeVideo](https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/e1e93024-31ca-4199-8e30-6d5d05e5b675)](https://youtu.be/ROUerlTH1hg)
-
-![Screenshot_5](https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/256ff44a-cac0-4282-82ea-30c233d50042)
-
-**Demonstration of tests running in `EditMode`:**
-
-<img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/f5a929cc-35c8-41a3-b7a5-9b4364035ac1" width="300">
-
+For testing:
+- **Unity Test Framework**
+- **Moq**
 
 ## Architecture
 
-For the architecture, I chose a 2-Tier Architecture, which includes a model layer (Game logic, Service Layer, Game settings, etc.) and UI. 
+For the architecture, I chose a 2-Tier Architecture, which includes a **model layer** (Game logic, Service Layer, Game settings, etc.) and **UI**. 
 
 The model layer knows absolutely nothing about the game's interface layer. All interaction between the model and UI occurs through an event bus in a unidirectional manner, and if the game lacks an interface, nothing breaks. This makes testing convenient and quick.
 
