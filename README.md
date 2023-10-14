@@ -16,10 +16,10 @@ I focused more on the code and architecture (extensibility, testability, perform
     </tr>
     <tr>
         <td>
-          <img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/8ae4af45-62ec-4e35-b6bd-5acdf1bffc23" width="400">
+          <img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/8ae4af45-62ec-4e35-b6bd-5acdf1bffc23">
         </td>
         <td>
-          <img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/e1e93024-31ca-4199-8e30-6d5d05e5b675" width="400">
+          <img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/e1e93024-31ca-4199-8e30-6d5d05e5b675">
         </td>
         <td>
           <img src="https://github.com/PapkovNikita/Core-Match-3-Mechanics/assets/3509865/f5a929cc-35c8-41a3-b7a5-9b4364035ac1">
