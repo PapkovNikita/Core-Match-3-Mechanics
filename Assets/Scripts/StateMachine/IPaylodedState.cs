@@ -4,6 +4,6 @@ namespace StateMachine
 {
     public interface IPaylodedState<TPayload> : IExitableState
     {
-        UniTask Enter(TPayload levelSettings);
+        UniTask Enter(TPayload payload);
     }
 }

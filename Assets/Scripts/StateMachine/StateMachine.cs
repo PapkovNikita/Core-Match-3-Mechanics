@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 
 namespace StateMachine
 {
-    public abstract class StateMachine : IStateMachine
+    public abstract class StateMachine : IStateMachine, IDisposable
     {
         private readonly Dictionary<Type, IExitableState> _states = new();
         private IExitableState _currentState;
@@ -26,13 +26,8 @@ namespace StateMachine
 
         public async UniTask Enter<TState, TPayload>(TPayload payload) where TState : class, IPaylodedState<TPayload>
         {
-            TState newState = await ChangeState<TState>();
+            var newState = await ChangeState<TState>();
             await newState.Enter(payload);
-        }
-
-        public void RegisterState<TState>(TState state) where TState : IExitableState
-        {
-            _states.Add(typeof(TState), state);
         }
 
         private async UniTask<TState> ChangeState<TState>() where TState : class, IExitableState
@@ -51,6 +46,11 @@ namespace StateMachine
         private TState GetState<TState>() where TState : class, IExitableState
         {
             return _states[typeof(TState)] as TState;
+        }
+
+        public void Dispose()
+        {
+            _currentState?.Exit();
         }
     }
 }
